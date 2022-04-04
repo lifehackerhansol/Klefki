@@ -57,7 +57,7 @@ class MB2General(commands.Cog):
                                 Here is a guide for how to patch using xDelta for Windows. (Unipatcher for Android uses the same layout)
                                 <https://www.romulation.org/tutorials/using-xdelta-to-patch-roms>
 
-                                If you are using any other device, use [ROM patcher JS](https://www.romhacking.net/patch) instead.
+                                If you are using any other device, use [Hack64's web patcher](https://hack64.net/tools/patcher.php) instead.
                                 """, title="ROM hack patching guide")
 
     @commands.command()
@@ -84,12 +84,12 @@ class MB2General(commands.Cog):
                                 Fairy-types will be completely removed in a future update to fix these problems.
                                 """, title="Fairy-type issues")
 
-    @commands.command(aliases=["halloffame"])
-    async def hof(self, ctx):
+    @commands.command(aliases=["hof"])
+    async def halloffame(self, ctx):
         """Hall of Fame warning"""
         await self.simple_embed(ctx, """
                                 A bug in Hall of Fame causes the entire game to crash if you bring any Fairy-type Pokemon. This may result in you ***losing your save file***.
-                                It is known that the **Noibat evolution line** also causes this issue.
+                                It is known that the **Noibat evolution line**, as well as **Marshadow**, also causes this issue. There are other Pokemon as well but this is unconfirmed.
 
                                 It is recommended to completely avoid using Fairy-types when challenging the Elite Four.
                                 """, title="Do NOT bring a Pokémon with a primary typing of Fairy to the Hall of Fame.")
@@ -102,9 +102,9 @@ class MB2General(commands.Cog):
                                 - DeSmuME (official latest version)
                                 - DraStic (official latest version)
                                 - melonDS (official latest version)
-                                - nds-bootstrap (official latest version)
+                                - TWiLight Menu++/nds-bootstrap (official latest version) (set `Run in` to `DS mode`)
                                 - R4i Gold 3DS Plus
-                                - SuperCard DSONEi
+                                - SuperCard DSONE SDHC/DSONEi
                                 - SuperCard DSTWO Plus
 
                                 Other emulators are not supported at this time. Other flashcarts *might* be supported, you can ping <@387858799198863361> if it does not work.
