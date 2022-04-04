@@ -48,8 +48,8 @@ class xkcdparse(commands.Cog):
 
     @commands.command()
     async def xkcd(self, ctx, *, comic):
-        comic = comic.lower()
         """Show xkcd comic by number. Use "latest" to show the latest comic, or "random" to show a random comic."""
+        comic = comic.lower()
         if comic == "latest":
             await ctx.send(f"https://xkcd.com/{xkcd.getLatestComic().number}/")
         elif comic == "random":
