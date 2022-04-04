@@ -35,5 +35,5 @@ class Newcomers(commands.Cog):
             await member.add_roles(role)
 
 
-def setup(bot):
-    bot.add_cog(Newcomers(bot))
+async def setup(bot):
+    await bot.add_cog(Newcomers(bot))

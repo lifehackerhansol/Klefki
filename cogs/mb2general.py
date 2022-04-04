@@ -111,5 +111,5 @@ class MB2General(commands.Cog):
                                 """, title="Which emulator or software works with Moon Black 2?")
 
 
-def setup(bot):
-    bot.add_cog(MB2General(bot))
+async def setup(bot):
+    await bot.add_cog(MB2General(bot))

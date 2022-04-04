@@ -233,5 +233,5 @@ class XYDMaps(commands.Cog):
         await self.mapembed(ctx, "kiloude.png", "Kiloude City")
 
 
-def setup(bot):
-    bot.add_cog(XYDMaps(bot))
+async def setup(bot):
+    await bot.add_cog(XYDMaps(bot))

@@ -44,5 +44,5 @@ class Extras(commands.Cog):
         await ctx.send(f"{ctx.guild.name} has {ctx.guild.member_count:,} members!")
 
 
-def setup(bot):
-    bot.add_cog(Extras(bot))
+async def setup(bot):
+    await bot.add_cog(Extras(bot))
