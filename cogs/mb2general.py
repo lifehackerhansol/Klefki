@@ -57,7 +57,7 @@ class MB2General(commands.Cog):
                                 Here is a guide for how to patch using xDelta for Windows. (Unipatcher for Android uses the same layout)
                                 <https://www.romulation.org/tutorials/using-xdelta-to-patch-roms>
 
-                                If you are using any other device, use [Hack64's web patcher](https://hack64.net/tools/patcher.php) instead.
+                                If you are using any other device, use [kotcrab's web patcher](https://kotcrab.github.io/xdelta-wasm/) instead.
                                 """, title="ROM hack patching guide")
 
     @commands.command()
