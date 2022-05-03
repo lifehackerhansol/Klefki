@@ -17,11 +17,12 @@
 # send_dm_message, command_signature, error embeds taken from Kurisu, http://www.apache.org/licenses/LICENSE-2.0
 #
 
-import traceback
 import datetime
+import re
 import time
-import discord
+import traceback
 
+import discord
 from discord.ext import commands
 from utils import sql
 
@@ -84,6 +85,19 @@ def is_staff():
                     return True
         return False
     return commands.check(predicate)
+
+
+def parse_time(time_str):
+    regex = re.compile(r'((?P<days>\d+?)d)?((?P<hours>\d+?)h)?((?P<minutes>\d+?)m)?((?P<seconds>\d+?)s)?')
+    parts = regex.match(time_str)
+    if not parts:
+        return
+    parts = parts.groupdict()
+    time_params = {}
+    for name, param in parts.items():
+        if param:
+            time_params[name] = int(param)
+    return datetime.timedelta(**time_params)
 
 
 def dtm_to_discord_timestamp(dtm_obj: datetime.datetime, date_format: str = "f", utc_time: bool = False) -> str:

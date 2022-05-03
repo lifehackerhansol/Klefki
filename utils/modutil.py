@@ -34,12 +34,14 @@ async def mute_role_exists(ctx):
 
 
 async def mute_member(ctx, member):
+    await member.timeout(None)
     muterole = await sql.get_muterole(ctx.guild.id)
     role = ctx.guild.get_role(muterole.id)
     return await member.add_roles(role)
 
 
 async def unmute_member(ctx, member):
+    await member.timeout(None)
     muterole = await sql.get_muterole(ctx.guild.id)
     role = ctx.guild.get_role(muterole.id)
     return await member.remove_roles(role)

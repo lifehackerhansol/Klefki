@@ -18,13 +18,16 @@
 # kickban.py
 #
 
-import discord
-
+from datetime import datetime
 from typing import Optional, Union
+
+import discord
 from discord.ext import commands
+from discord.utils import format_dt
+
 from utils.modutil import check_if_staff, is_muted, mute_role_exists, mute_member, unmute_member
 from utils.sql import get_warns, add_warn, remove_warn
-from utils.utils import is_staff, send_dm_message, dtm_to_discord_timestamp
+from utils.utils import is_staff, send_dm_message, parse_time, dtm_to_discord_timestamp
 
 
 class Mod(commands.Cog):
@@ -237,6 +240,29 @@ class Mod(commands.Cog):
             embed.colour = discord.Color.green()
         await ctx.send(embed=embed)
 
+    @is_staff()
+    @commands.command(aliases=['timemute'])
+    async def timeout(self, ctx: commands.Context, member: discord.Member, length: str, *, reason: Optional[str]):
+        """Times out a user. Staff only.\n\nLength format: #d#h#m#s"""
+        length = parse_time(length)
+        if length is None:
+            return
+        timeout_expiration = format_dt(datetime.now() + length)
+        if not await mute_role_exists(ctx):
+            return await ctx.send("Mute role is not set in settings, or role cannot be found! Cannot mute.")
+        if await check_if_staff(ctx, member):
+            return await ctx.send("You cannot mute another staff member!")
+        if length.total_seconds() > 2419200:  # Timeout time can't be more than 28 days
+            return await ctx.send("Timeouts can't be longer than 28 days!")
+        await unmute_member(ctx, member)  # remove mute role, if exists
+        await member.timeout(length, reason=reason)
+        msg_user = "You were muted!"
+        if reason is not None:
+            msg_user += f" The given reason is: {reason}"
+        msg_user += f"\nIt will expire in {timeout_expiration}."
+        await send_dm_message(member, msg_user, ctx)
+        await ctx.send(f"{member.mention} has been given a timeout. It will expire in {timeout_expiration}.")
+
     @commands.command()
     @commands.bot_has_permissions(manage_roles=True)
     @is_staff()
@@ -262,7 +288,7 @@ class Mod(commands.Cog):
         """Unmutes a user so they can speak. Staff only."""
         if not await mute_role_exists(ctx):
             return await ctx.send("Mute role is not set in settings, or role cannot be found! Cannot unmute.")
-        if not await is_muted(ctx, member):
+        if not member.is_timed_out() and not await is_muted(ctx, member):
             return await ctx.send("This member is not muted!")
         await unmute_member(ctx, member)
         await ctx.send(f"{member.mention} can now speak again.")
