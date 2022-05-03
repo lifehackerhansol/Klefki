@@ -21,7 +21,7 @@ jobs:
       - name: Check with flake8
         run: |
           flake8 . --ignore=E501
-      - name: Reboot Neptune
+      - name: Reboot Klefki
         uses: fifsky/ssh-action@master
         with:
           command: |
