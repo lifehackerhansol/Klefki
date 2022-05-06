@@ -19,11 +19,11 @@
 
 import datetime
 import re
-import time
 import traceback
 
 import discord
 from discord.ext import commands
+
 from utils import sql
 
 
@@ -98,9 +98,3 @@ def parse_time(time_str):
         if param:
             time_params[name] = int(param)
     return datetime.timedelta(**time_params)
-
-
-def dtm_to_discord_timestamp(dtm_obj: datetime.datetime, date_format: str = "f", utc_time: bool = False) -> str:
-    if utc_time:
-        dtm_obj = dtm_obj.replace(tzinfo=datetime.timezone.utc).astimezone()
-    return f"<t:{int(time.mktime(dtm_obj.timetuple()))}:{date_format}>"
