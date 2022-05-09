@@ -25,12 +25,11 @@ class Load(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx):
-        if ctx.guild is None:
-            raise commands.NoPrivateMessage()
+        if not await self.bot.is_owner(ctx.author):
+            raise commands.CheckFailure()
         return True
 
     @commands.command(hidden=True)
-    @commands.is_owner()
     async def load(self, ctx, *, module: str):
         """Loads a Cog."""
         try:
@@ -42,7 +41,6 @@ class Load(commands.Cog):
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
     @commands.command(hidden=True)
-    @commands.is_owner()
     async def unload(self, ctx, *, module: str):
         """Unloads a Cog."""
         try:
@@ -57,7 +55,6 @@ class Load(commands.Cog):
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
     @commands.command(hidden=True)
-    @commands.is_owner()
     async def reload(self, ctx, *, module: str):
         """Reloads a Cog."""
         try:
@@ -67,6 +64,12 @@ class Load(commands.Cog):
             await ctx.send('✅ Extension reloaded.')
         except Exception as e:
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
+
+    @commands.command(hidden=True)
+    async def quit(self, ctx):
+        """Stops the bot."""
+        await ctx.send("👋 Bye bye!")
+        await self.bot.close()
 
 
 async def setup(bot):
