@@ -78,6 +78,7 @@ class Klefki(commands.Bot):
         await super().close()
 
     async def on_ready(self):
+        await self.tree.sync()
         print("Klefki ready.")
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):

@@ -46,9 +46,9 @@ class xkcdparse(commands.Cog):
         "real programmers": 378
     }
 
-    @commands.command()
+    @commands.hybrid_command()
     async def xkcd(self, ctx, *, comic):
-        """Show xkcd comic by number. Use "latest" to show the latest comic, or "random" to show a random comic."""
+        """Show xkcd comic by number. Use "latest" to show latest comic, or "random" to show random comic."""
         comic = comic.lower()
         if comic == "latest":
             await ctx.send(f"https://xkcd.com/{xkcd.getLatestComic().number}/")

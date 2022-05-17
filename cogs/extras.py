@@ -30,7 +30,7 @@ class Extras(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.hybrid_command()
     async def klefki(self, ctx):
         """Information on the bot Klefki"""
         embed = discord.Embed(title="Klefki")
