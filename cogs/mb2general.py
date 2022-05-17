@@ -57,7 +57,7 @@ class MB2General(commands.Cog):
                                 Here is a guide for how to patch using xDelta for Windows. (Unipatcher for Android uses the same layout)
                                 <https://www.romulation.org/tutorials/using-xdelta-to-patch-roms>
 
-                                If you are using any other device, use [kotcrab's web patcher](https://kotcrab.github.io/xdelta-wasm/) instead.
+                                **If you are using any other device**, use [kotcrab's web patcher](https://kotcrab.github.io/xdelta-wasm/) instead.
                                 """, title="ROM hack patching guide")
 
     @commands.command()
@@ -100,9 +100,8 @@ class MB2General(commands.Cog):
         await self.simple_embed(ctx, """
                                 Moon Black 2 is confirmed to work on these platforms:
                                 - DeSmuME (official latest version)
-                                - DraStic (official latest version)
                                 - melonDS (official latest version)
-                                - TWiLight Menu++/nds-bootstrap (official latest version) (set `Run in` to `DS mode`)
+                                - TWiLight Menu++/nds-bootstrap (official latest version)
                                 - R4i Gold 3DS Plus
                                 - SuperCard DSONE SDHC/DSONEi
                                 - SuperCard DSTWO Plus
