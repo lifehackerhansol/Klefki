@@ -99,9 +99,10 @@ class MB2General(commands.Cog):
         """Compatibility list"""
         await self.simple_embed(ctx, """
                                 Moon Black 2 is confirmed to work on these platforms:
-                                - DeSmuME (official latest version)
-                                - melonDS (official latest version)
-                                - TWiLight Menu++/nds-bootstrap (official latest version)
+                                - [DeSmuME (official latest version)](http://desmume.org/download/)
+                                - [melonDS (official latest version)](https://melonds.kuribo64.net/downloads.php)
+                                - [melonDS Android (official latest beta version)](https://play.google.com/store/apps/details?id=me.magnum.melonds)
+                                - [TWiLight Menu++/nds-bootstrap (official latest version)](https://wiki.ds-homebrew.com/twilightmenu/installing.html)
                                 - R4i Gold 3DS Plus
                                 - SuperCard DSONE SDHC/DSONEi
                                 - SuperCard DSTWO Plus
