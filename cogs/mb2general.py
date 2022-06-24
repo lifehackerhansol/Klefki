@@ -110,6 +110,14 @@ class MB2General(commands.Cog):
                                 Other emulators are not supported at this time. Other flashcarts *might* be supported, you can ping <@387858799198863361> if it does not work.
                                 """, title="Which emulator or software works with Moon Black 2?")
 
+    @commands.command()
+    async def pokedex(self, ctx):
+        """Pokedex entries"""
+        await self.simple_embed(ctx, """
+                                [Moon Black 2 Pokedex list](https://pastebin.com/TbxtwUYF)
+                                """
+                                )
+
 
 async def setup(bot):
     await bot.add_cog(MB2General(bot))
