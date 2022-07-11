@@ -1,4 +1,4 @@
-tortoise-orm~=0.19.1
+tortoise-orm~=0.19.2
 jishaku~=2.5.0
 psutil~=5.9.1
 git+https://github.com/Rapptz/discord.py@04f5fcf7418f1964236811d2b25a6ba12c7d5ae2
