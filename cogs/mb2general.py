@@ -118,6 +118,14 @@ class MB2General(commands.Cog):
                                 """
                                 )
 
+    @commands.command()
+    async def unovaforms(self, ctx):
+        """Unova forms"""
+        await self.simple_embed(ctx, """
+                                [Moon Black 2 Unova forms](https://pastebin.com/cLQapvGh)
+                                """
+                                )
+
 
 async def setup(bot):
     await bot.add_cog(MB2General(bot))
