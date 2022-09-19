@@ -1,6 +1,6 @@
 tortoise-orm~=0.19.2
 jishaku~=2.5.1
 psutil~=5.9.2
-git+https://github.com/Rapptz/discord.py@04f5fcf7418f1964236811d2b25a6ba12c7d5ae2
 aerich~=0.6.3
 xkcd~=2.4.2
+discord.py~=2.0.1
