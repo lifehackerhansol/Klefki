@@ -1,6 +1,6 @@
 tortoise-orm~=0.19.2
 jishaku~=2.5.1
 psutil~=5.9.2
-aerich~=0.7.0
+aerich~=0.7.1
 xkcd~=2.4.2
 discord.py~=2.0.1
