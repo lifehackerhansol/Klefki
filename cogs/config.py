@@ -49,7 +49,7 @@ class Config(commands.Cog):
                 modrole = await self.bot.db.get_modroles(ctx.guild.id)
                 modroleid = []
                 for mod in modrole:
-                    modroleid.append(mod.id)
+                    modroleid.append(mod['id'])
                 if roleid in modroleid:
                     return await ctx.send(f"{role.name} is already a moderator role!")
                 await self.bot.db.add_modrole(ctx.guild.id, roleid)
