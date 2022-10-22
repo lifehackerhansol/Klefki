@@ -52,7 +52,7 @@ async def check_if_staff(ctx, member):
         modroles = await ctx.bot.db.get_modroles(ctx.guild.id)
         modroleid = []
         for role in modroles:
-            modroleid.append(role.id)
+            modroleid.append(role['id'])
         for role in member.roles:
             if role.id in modroleid:
                 return True
