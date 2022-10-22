@@ -58,6 +58,7 @@ class SQLDB():
 
     async def remove_warn(self, user_id: int, guild_id: int, index: int):
         async with aiosqlite.connect(self.dbpath) as conn:
+            conn.row_factory = sqlite3.Row
             warns = await conn.execute_fetchall(f"SELECT * FROM warns WHERE user_id={user_id} AND guild_id={guild_id};")
             warnid = warns[index - 1]["id"]
             await conn.execute(f"DELETE FROM warns WHERE id={warnid};")
