@@ -24,8 +24,6 @@ import traceback
 import discord
 from discord.ext import commands
 
-from utils import sql
-
 
 async def send_dm_message(member: discord.Member, message: str, ctx: commands.Context = None, **kwargs) -> bool:
     """A helper function for sending a message to a member's DMs.
@@ -76,10 +74,10 @@ def is_staff():
         if ctx.author == ctx.guild.owner:
             return True
         else:
-            modroles = await sql.get_modroles(ctx.guild.id)
+            modroles = await ctx.bot.db.get_modroles(ctx.guild.id)
             modroleid = []
             for role in modroles:
-                modroleid.append(role.id)
+                modroleid.append(role['id'])
             for role in ctx.author.roles:
                 if role.id in modroleid:
                     return True

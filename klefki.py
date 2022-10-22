@@ -17,29 +17,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-import os
-import json
-import discord
-import aiohttp
 import asyncio
+import json
+import os
 
+import aiohttp
+import discord
 from discord.ext import commands
-from tortoise import Tortoise
-from aerich import Command
+
+from utils.sql import SQLDB
 from utils.utils import create_error_embed
-from tortoiseconf import TORTOISE_ORM
-
-
-async def init():
-    print('Initializing SQLite DB...')
-    if os.path.isfile("klefki.db") and os.path.isdir("migrations/models"):
-        print("Updating SQLite DB...")
-        command = Command(tortoise_config=TORTOISE_ORM, app='models')
-        await command.init()
-        await command.upgrade()
-    await Tortoise.init(config=TORTOISE_ORM)
-    # Generate the schema
-    await Tortoise.generate_schemas()
 
 
 class Klefki(commands.Bot):
@@ -53,6 +40,7 @@ class Klefki(commands.Bot):
             status=discord.Status.online,
             case_insensitive=True
         )
+        self.db = SQLDB(self)
 
     async def load_cogs(self):
         cog = ""
@@ -72,10 +60,6 @@ class Klefki(commands.Bot):
         except Exception as e:
             exc = "{}: {}".format(type(e).__name__, e)
             print("Failed to load cog {}\n{}".format(cog, exc))
-
-    async def close(self):
-        await self.session.close()
-        await super().close()
 
     async def on_ready(self):
         await self.tree.sync()
@@ -133,7 +117,6 @@ class Klefki(commands.Bot):
 
 
 async def mainprocess():
-    await init()
     f = open("config.json")
     configuration = json.load(f)
     f.close()
@@ -143,7 +126,6 @@ async def mainprocess():
     bot.session = aiohttp.ClientSession()
     await bot.load_cogs()
     await bot.start(configuration['TOKEN'])
-    await Tortoise.close_connections()
 
 
 if __name__ == '__main__':

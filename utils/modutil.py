@@ -15,19 +15,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from utils import sql
-
 
 async def is_muted(ctx, member):
-    muterole = await sql.get_muterole(ctx.guild.id)
+    muterole = await ctx.bot.db.get_muterole(ctx.guild.id)
     for role in member.roles:
-        if muterole.id == role.id:
+        if muterole == role.id:
             return True
     return False
 
 
 async def mute_role_exists(ctx):
-    muterole = await sql.get_muterole(ctx.guild.id)
+    muterole = await ctx.bot.db.get_muterole(ctx.guild.id)
     if muterole:
         return True
     return False
@@ -35,15 +33,15 @@ async def mute_role_exists(ctx):
 
 async def mute_member(ctx, member):
     await member.timeout(None)
-    muterole = await sql.get_muterole(ctx.guild.id)
-    role = ctx.guild.get_role(muterole.id)
+    muterole = await ctx.bot.db.get_muterole(ctx.guild.id)
+    role = ctx.guild.get_role(muterole)
     return await member.add_roles(role)
 
 
 async def unmute_member(ctx, member):
     await member.timeout(None)
-    muterole = await sql.get_muterole(ctx.guild.id)
-    role = ctx.guild.get_role(muterole.id)
+    muterole = await ctx.bot.db.get_muterole(ctx.guild.id)
+    role = ctx.guild.get_role(muterole)
     return await member.remove_roles(role)
 
 
@@ -51,22 +49,11 @@ async def check_if_staff(ctx, member):
     if member == ctx.guild.owner:
         return True
     else:
-        modroles = await sql.get_modroles(ctx.guild.id)
+        modroles = await ctx.bot.db.get_modroles(ctx.guild.id)
         modroleid = []
         for role in modroles:
             modroleid.append(role.id)
         for role in member.roles:
             if role.id in modroleid:
                 return True
-    return False
-
-
-async def autorole_enabled(guild_id):
-    guild = await sql.get_guild(guild_id)
-    if not guild:
-        guild = await sql.add_guild(guild_id)
-    if guild.autorole:
-        autorole = await sql.get_autorole(guild_id)
-        if autorole:
-            return True
     return False

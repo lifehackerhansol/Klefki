@@ -15,134 +15,99 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from typing import Optional
+import sqlite3
 from datetime import datetime
+
+import aiosqlite
 from discord.utils import time_snowflake
-from utils import models
 
 
-def generate_id() -> int:
-    return time_snowflake(datetime.now())
+class SQLDB():
+    def __init__(self, bot):
+        self.bot = bot
 
+    dbpath = "klefki.db"
 
-async def get_member(user_id: int) -> Optional[models.Member]:
-    return await models.Member.get_or_none(id=user_id)
+    def generate_id(self) -> int:
+        return time_snowflake(datetime.now())
 
+    async def get_guild(self, guild_id: int):
+        async with aiosqlite.connect(self.dbpath) as conn:
+            conn.row_factory = sqlite3.Row
+            return await conn.execute_fetchall(f"SELECT * FROM guilds WHERE id={guild_id};")
 
-async def add_member(user_id: int) -> Optional[models.Member]:
-    return await models.Member.create(id=user_id)
+    async def add_guild(self, guild_id: int):
+        async with aiosqlite.connect(self.dbpath) as conn:
+            await conn.execute_insert(f"INSERT INTO guilds (id) VALUES ({guild_id});")
+            await conn.commit()
 
+    async def get_warns(self, user_id: int, guild_id: int):
+        async with aiosqlite.connect(self.dbpath) as conn:
+            conn.row_factory = sqlite3.Row
+            return await conn.execute_fetchall(f"SELECT * FROM warns WHERE user_id={user_id} AND guild_id={guild_id};")
 
-async def get_guild(guild_id: int) -> Optional[models.Guild]:
-    return await models.Guild.get_or_none(id=guild_id)
+    async def add_warn(self, user_id: int, issuer_id: int, guild_id: int, reason: str):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            await self.add_guild(guild_id)
+        async with aiosqlite.connect(self.dbpath) as conn:
+            await conn.execute_insert(
+                f"INSERT INTO warns (id, user_id, issuer_id, guild_id, reason) VALUES ({self.generate_id()}, {user_id}, {issuer_id}, {guild_id}, '{reason}');"
+            )
+            await conn.commit()
 
+    async def remove_warn(self, user_id: int, guild_id: int, index: int):
+        async with aiosqlite.connect(self.dbpath) as conn:
+            warns = await conn.execute_fetchall(f"SELECT * FROM warns WHERE user_id={user_id} AND guild_id={guild_id};")
+            warnid = warns[index - 1]["id"]
+            await conn.execute(f"DELETE FROM warns WHERE id={warnid};")
+            await conn.commit()
 
-async def add_guild(guild_id: int) -> Optional[models.Guild]:
-    return await models.Guild.create(id=guild_id)
+    async def add_modrole(self, guild_id: int, role_id: int):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            await self.add_guild(guild_id)
+        async with aiosqlite.connect(self.dbpath) as conn:
+            await conn.execute_insert(f"INSERT INTO modroles (id, guild_id) VALUES ({role_id}, {guild_id});")
+            await conn.commit()
 
+    async def get_modroles(self, guild_id: int):
+        async with aiosqlite.connect(self.dbpath) as conn:
+            conn.row_factory = sqlite3.Row
+            return await conn.execute_fetchall(f"SELECT id FROM modroles WHERE guild_id={guild_id};")
 
-async def get_warns(user_id: int, guild_id: int) -> list[models.Warn]:
-    return await models.Warn.filter(user_id=user_id, guild_id=guild_id).all()
+    async def remove_modrole(self, guild_id: int, role_id: int) -> int:
+        modroles = await self.get_modroles(guild_id)
+        if not modroles:
+            return 1
+        for role in modroles:
+            if role_id == role['id']:
+                async with aiosqlite.connect(self.dbpath) as conn:
+                    await conn.execute(f"DELETE FROM modroles WHERE id={role_id} AND guild_id={guild_id};")
+                    await conn.commit()
+                return 0
+        return 2
 
+    async def add_muterole(self, guild_id: int, role_id: int):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            await self.add_guild(guild_id)
+        async with aiosqlite.connect(self.dbpath) as conn:
+            await conn.execute(f"UPDATE guilds SET mute_id={role_id} WHERE id={guild_id};")
+            await conn.commit()
 
-async def add_warn(user_id: int, issuer_id: int, guild_id: int, reason: str):
-    member = await get_member(user_id)
-    if not member:
-        await models.Member.create(id=user_id)
-    issuer = await get_member(issuer_id)
-    if not issuer:
-        await models.Member.create(id=issuer_id)
-    guild = await get_guild(guild_id)
-    if not guild:
-        await models.Guild.create(id=guild_id)
-    await models.Warn.create(id=generate_id(), guild_id=guild_id, user_id=user_id, issuer_id=issuer_id, reason=reason)
+    async def get_muterole(self, guild_id: int):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            return None
+        return guild[0]['mute_id']
 
-
-async def remove_warn(user_id: int, guild_id: int, index: int):
-    warn = await models.Warn.filter(user_id=user_id, guild_id=guild_id).offset(index - 1).first()
-    await warn.delete()
-
-
-async def add_modrole(guild_id: int, role_id: int) -> Optional[models.ModRole]:
-    guild = await get_guild(guild_id)
-    if not guild:
-        await models.Guild.create(id=guild_id)
-    return await models.ModRole.create(id=role_id, guild_id=guild_id)
-
-
-async def remove_modrole(guild_id: int, role_id: int) -> int:
-    modroles = await get_modroles(guild_id)
-    if not modroles:
-        return 1
-    for role in modroles:
-        if role_id == role.id:
-            await role.delete()
+    async def remove_muterole(self, guild_id: int, role_id: int) -> int:
+        muterole = await self.get_muterole(guild_id)
+        if not muterole:
+            return 1
+        if muterole == role_id:
+            async with aiosqlite.connect(self.dbpath) as conn:
+                await conn.execute(f"UPDATE guilds SET mute_id=NULL WHERE id={guild_id};")
             return 0
-    return 2
-
-
-async def get_modroles(guild_id: int) -> list[models.ModRole]:
-    return await models.ModRole.filter(guild_id=guild_id).all()
-
-
-async def add_muterole(guild_id: int, role_id: int) -> Optional[models.MuteRole]:
-    guild = await get_guild(guild_id)
-    if not guild:
-        await models.Guild.create(id=guild_id)
-    return await models.MuteRole.create(id=role_id, guild_id=guild_id)
-
-
-async def remove_muterole(guild_id: int, role_id: int) -> int:
-    muterole = await get_muterole(guild_id)
-    if not muterole:
-        return 1
-    if muterole.id == role_id:
-        await muterole.delete()
-        return 0
-    return 2
-
-
-async def get_muterole(guild_id: int) -> Optional[models.MuteRole]:
-    return await models.MuteRole.filter(guild_id=guild_id).first()
-
-
-async def set_guild_config(guild_id: int, configtype: str, setval: bool):
-    guild = await get_guild(guild_id)
-    if not guild:
-        guild = await models.Guild.create(id=guild_id)
-    if configtype == "mb2":
-        guild.mb2 = setval
-    elif configtype == "autorole":
-        guild.autorole = setval
-    return await guild.save()
-
-
-async def get_guild_config(guild_id: int, configtype: str) -> bool:
-    guild = await get_guild(guild_id)
-    if not guild:
-        guild = await models.Guild.create(id=guild_id)
-    if configtype == "mb2":
-        return guild.mb2
-    elif configtype == "autorole":
-        return guild.autorole
-
-
-async def add_autorole(guild_id: int, role_id: int) -> Optional[models.AutoRole]:
-    guild = await get_guild(guild_id)
-    if not guild:
-        await models.Guild.create(id=guild_id)
-    return await models.AutoRole.create(id=role_id, guild_id=guild_id)
-
-
-async def remove_autorole(guild_id: int, role_id: int) -> int:
-    autorole = await get_autorole(guild_id)
-    if not autorole:
-        return 1
-    if autorole.id == role_id:
-        await autorole.delete()
-        return 0
-    return 2
-
-
-async def get_autorole(guild_id: int) -> Optional[models.AutoRole]:
-    return await models.AutoRole.filter(guild_id=guild_id).first()
+        return 2

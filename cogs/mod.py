@@ -26,7 +26,6 @@ from discord.ext import commands
 from discord.utils import format_dt
 
 from utils.modutil import check_if_staff, is_muted, mute_role_exists, mute_member, unmute_member
-from utils.sql import get_warns, add_warn, remove_warn
 from utils.utils import is_staff, send_dm_message, parse_time
 
 
@@ -159,11 +158,11 @@ class Mod(commands.Cog):
         """Warn a user. Staff only."""
         if await check_if_staff(ctx, member):
             return await ctx.send("You cannot warn another staff member!")
-        warn_count = len(await get_warns(member.id, ctx.guild.id))
+        warn_count = len(await self.bot.db.get_warns(member.id, ctx.guild.id))
         if warn_count >= 5:
             await ctx.send("A user can't have more than 5 warns!")
             return
-        await add_warn(member.id, ctx.author.id, ctx.guild.id, reason)
+        await self.bot.db.add_warn(member.id, ctx.author.id, ctx.guild.id, reason)
         warn_count += 1
         if isinstance(member, discord.Member):
             msg = f"You were warned on {ctx.guild.name}."
@@ -196,7 +195,7 @@ class Mod(commands.Cog):
     @is_staff()
     async def delwarn(self, ctx, member: Union[discord.Member, discord.User], idx: int):
         """Remove a specific warn from a user. Staff only."""
-        warns = await get_warns(member.id, ctx.guild.id)
+        warns = await self.bot.db.get_warns(member.id, ctx.guild.id)
         if not warns:
             return await ctx.send(f"{member.mention} has no warns!")
         warn_count = len(warns)
@@ -204,7 +203,7 @@ class Mod(commands.Cog):
             return await ctx.send(f"Warn index is higher than warn count ({warn_count})!")
         if idx < 1:
             return await ctx.send("Warn index is below 1!")
-        await remove_warn(member.id, ctx.guild.id, idx)
+        await self.bot.db.remove_warn(member.id, ctx.guild.id, idx)
         await ctx.send(f"{member.mention} has a warning removed!")
 
     @commands.command()
@@ -213,21 +212,21 @@ class Mod(commands.Cog):
         if not member:  # If user is set to None, its a selfcheck
             member = ctx.author
         issuer = ctx.author
-        if not check_if_staff(ctx, ctx.author):
+        if not await check_if_staff(ctx, ctx.author):
             msg = f"{issuer.mention} Using this command on others is limited to Staff."
             return await ctx.send(msg)
         embed = discord.Embed(color=discord.Color.dark_red())
         embed.set_author(name=f"Warns for {member}", icon_url=member.display_avatar.url)
-        warns = await get_warns(member.id, ctx.guild.id)
+        warns = await self.bot.db.get_warns(member.id, ctx.guild.id)
         if warns:
             idx = 0
             for warn in warns:
                 idx += 1
-                issuer = ctx.guild.get_member(warn.issuer_id)
+                issuer = ctx.guild.get_member(warn['issuer_id'])
                 value = ""
                 value += f"Issuer: {issuer.name}\n"
-                value += f"Reason: {warn.reason} "
-                embed.add_field(name=f"{idx}: {discord.utils.snowflake_time(warn.id).strftime('%Y-%m-%d %H:%M:%S')}", value=value)
+                value += f"Reason: {warn['reason']} "
+                embed.add_field(name=f"{idx}: {discord.utils.snowflake_time(warn['id']).strftime('%Y-%m-%d %H:%M:%S')}", value=value)
         else:
             embed.description = "There are none!"
             embed.colour = discord.Color.green()

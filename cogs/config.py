@@ -16,7 +16,6 @@
 #
 
 from discord.ext import commands
-from utils import sql
 from utils.utils import is_staff, is_guild_owner
 
 
@@ -47,13 +46,13 @@ class Config(commands.Cog):
         """Add moderator roles for this server"""
         for role in ctx.guild.roles:
             if role.id == roleid:
-                modrole = await sql.get_modroles(ctx.guild.id)
+                modrole = await self.bot.db.get_modroles(ctx.guild.id)
                 modroleid = []
                 for mod in modrole:
                     modroleid.append(mod.id)
                 if roleid in modroleid:
                     return await ctx.send(f"{role.name} is already a moderator role!")
-                await sql.add_modrole(ctx.guild.id, roleid)
+                await self.bot.db.add_modrole(ctx.guild.id, roleid)
                 return await ctx.send(f"Success! `{role.name}` is now a moderator role.")
         await ctx.send("Role does not exist. Please try again.")
 
@@ -62,7 +61,7 @@ class Config(commands.Cog):
         """Remove moderator roles for this server"""
         for role in ctx.guild.roles:
             if role.id == roleid:
-                err = await sql.remove_modrole(ctx.guild.id, roleid)
+                err = await self.bot.db.remove_modrole(ctx.guild.id, roleid)
                 if err == 1:
                     return await ctx.send("There are no moderator roles set for this server!")
                 if err == 2:
@@ -82,10 +81,10 @@ class Config(commands.Cog):
         """Add mute role for this server"""
         for role in ctx.guild.roles:
             if role.id == roleid:
-                muterole = await sql.get_muterole(ctx.guild.id)
+                muterole = await self.bot.db.get_muterole(ctx.guild.id)
                 if muterole:
                     return await ctx.send("A mute role already exists!")
-                await sql.add_muterole(ctx.guild.id, roleid)
+                await self.bot.db.add_muterole(ctx.guild.id, roleid)
                 return await ctx.send(f"Success! `{role.name}` is now a mute role.")
         await ctx.send("Role does not exist. Please try again.")
 
@@ -94,81 +93,13 @@ class Config(commands.Cog):
         """Remove mute role for this server"""
         for role in ctx.guild.roles:
             if role.id == roleid:
-                err = await sql.remove_muterole(ctx.guild.id, roleid)
+                err = await self.bot.db.remove_muterole(ctx.guild.id, roleid)
                 if err == 1:
                     return await ctx.send("There is no mute role set for this server!")
                 if err == 2:
                     return await ctx.send(f"`{role.name}` is not a mute role!")
                 if err == 0:
                     return await ctx.send(f"Success! `{role.name}` is no longer a mute role.")
-        await ctx.send("Role does not exist. Please try again.")
-
-    @config.group(name='commands')
-    async def cogcommands(self, ctx):
-        """Enable/disable commands for this server"""
-        if ctx.invoked_subcommand is None:
-            await ctx.send_help(ctx.command)
-
-    @cogcommands.command(name='enable')
-    async def cogcommands_enable(self, ctx, cogtype: str):
-        """Enable commands. Available: [mb2 (Moon Black 2 specific commands)] or [xyd (XY Demake specific commands)]"""
-        if cogtype not in ["mb2", "xyd"]:
-            return await ctx.send("This set of commands do not exist. Please try again.")
-        else:
-            await sql.set_guild_config(ctx.guild.id, cogtype, True)
-            await ctx.send("Success! Commands are now enabled.")
-
-    @cogcommands.command(name='disable')
-    async def cogcommands_disable(self, ctx, cogtype: str):
-        """Disable commands. Available: [mb2 (Moon Black 2 specific commands)] or [xyd (XY Demake specific commands)]"""
-        if cogtype not in ["mb2", "xyd"]:
-            return await ctx.send("This set of commands do not exist. Please try again.")
-        else:
-            await sql.set_guild_config(ctx.guild.id, cogtype, False)
-            await ctx.send("Success! Commands are now disabled.")
-
-    @config.group()
-    async def autorole(self, ctx):
-        """Enable/disable/add autorole for this server"""
-        if ctx.invoked_subcommand is None:
-            await ctx.send_help(ctx.command)
-
-    @autorole.command(name='enable')
-    async def autorole_enable(self, ctx):
-        """Enable automatic roles on join."""
-        await sql.set_guild_config(ctx.guild.id, "autorole", True)
-        await ctx.send("Success! Automatic roles are now enabled.")
-
-    @autorole.command(name='disable')
-    async def autorole_disable(self, ctx):
-        """Disable automatic roles."""
-        await sql.set_guild_config(ctx.guild.id, "autorole", False)
-        await ctx.send("Success! Automatic roles are now disabled.")
-
-    @autorole.command(name='add')
-    async def autorole_add(self, ctx, roleid: int):
-        """Add mute role for this server"""
-        for role in ctx.guild.roles:
-            if role.id == roleid:
-                autorole = await sql.get_autorole(ctx.guild.id)
-                if autorole:
-                    return await ctx.send("An automatic role already exists!")
-                await sql.add_autorole(ctx.guild.id, roleid)
-                return await ctx.send(f"Success! `{role.name}` will now be added automatically on join.")
-        await ctx.send("Role does not exist. Please try again.")
-
-    @autorole.command(name='remove')
-    async def autorole_remove(self, ctx, roleid: int):
-        """Remove mute role for this server"""
-        for role in ctx.guild.roles:
-            if role.id == roleid:
-                err = await sql.remove_autorole(ctx.guild.id, roleid)
-                if err == 1:
-                    return await ctx.send("There is no automatic role set for this server!")
-                if err == 2:
-                    return await ctx.send(f"`{role.name}` is not an automatic role!")
-                if err == 0:
-                    return await ctx.send(f"Success! `{role.name}` will no longer be added automatically.")
         await ctx.send("Role does not exist. Please try again.")
 
 
