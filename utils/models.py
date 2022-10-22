@@ -29,7 +29,6 @@ class Member(Model):
 class Guild(Model):
     id = fields.BigIntField(pk=True)
     mb2 = fields.BooleanField(default=False)
-    xyd = fields.BooleanField(default=False)
     autorole = fields.BooleanField(default=False)
 
     class Meta:

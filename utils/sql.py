@@ -112,8 +112,6 @@ async def set_guild_config(guild_id: int, configtype: str, setval: bool):
         guild = await models.Guild.create(id=guild_id)
     if configtype == "mb2":
         guild.mb2 = setval
-    elif configtype == "xyd":
-        guild.xyd = setval
     elif configtype == "autorole":
         guild.autorole = setval
     return await guild.save()
@@ -125,8 +123,6 @@ async def get_guild_config(guild_id: int, configtype: str) -> bool:
         guild = await models.Guild.create(id=guild_id)
     if configtype == "mb2":
         return guild.mb2
-    elif configtype == "xyd":
-        return guild.xyd
     elif configtype == "autorole":
         return guild.autorole
 

@@ -19,21 +19,15 @@ import discord
 
 from inspect import cleandoc
 from discord.ext import commands
-from utils.sql import get_guild_config
 
 
-class MB2General(commands.Cog):
+class General(commands.Cog):
     """
     General commands
     """
 
     def __init__(self, bot):
         self.bot = bot
-
-    async def cog_check(self, ctx):
-        if not await get_guild_config(ctx.guild.id, "mb2"):
-            raise commands.CheckFailure()
-        return True
 
     async def simple_embed(self, ctx, text, *, title="", color=discord.Color.default()):
         embed = discord.Embed(title=title, color=color)
@@ -128,4 +122,4 @@ class MB2General(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(MB2General(bot))
+    await bot.add_cog(General(bot))
