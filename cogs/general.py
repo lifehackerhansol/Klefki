@@ -48,7 +48,7 @@ class General(commands.Cog):
     async def patchguide(self, ctx):
         """How to patch a ROM"""
         await self.simple_embed(ctx, """
-                                Here is a guide for how to patch using xDelta for Windows. (Unipatcher for Android uses the same layout)
+                                Here is a guide for how to patch using xDelta for Windows.
                                 <https://www.romulation.org/tutorials/using-xdelta-to-patch-roms>
 
                                 **If you are using any other device**, use [kotcrab's web patcher](https://kotcrab.github.io/xdelta-wasm/) instead.
