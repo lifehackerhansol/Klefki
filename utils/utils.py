@@ -99,7 +99,7 @@ def parse_time(time_str):
     return datetime.timedelta(**time_params)
 
 
-def simple_embed(self, text="", title="", color=discord.Color.default()) -> discord.Embed:
+def simple_embed(text="", title="", color=discord.Color.default()) -> discord.Embed:
     embed = discord.Embed(title=title, color=color)
     embed.description = cleandoc(text)
     return embed
