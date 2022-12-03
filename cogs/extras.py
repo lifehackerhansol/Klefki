@@ -48,7 +48,7 @@ class Extras(commands.Cog):
 
     @commands.command(aliases=['ui'])
     async def userinfo(self, ctx, user: Union[discord.Member, discord.User] = None):
-        """Shows information from a user. Staff only."""
+        """Shows information from a user."""
         if user is None:
             user = ctx.author
 
