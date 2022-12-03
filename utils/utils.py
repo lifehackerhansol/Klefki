@@ -64,6 +64,8 @@ def create_error_embed(ctx, exc) -> discord.Embed:
 
 def is_guild_owner():
     async def predicate(ctx):
+        if not ctx.guild:
+            return False
         if ctx.author == ctx.guild.owner:
             return True
         return False
@@ -72,6 +74,8 @@ def is_guild_owner():
 
 def is_staff():
     async def predicate(ctx):
+        if not ctx.guild:
+            return False
         if ctx.author == ctx.guild.owner:
             return True
         else:
