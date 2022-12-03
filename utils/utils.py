@@ -20,6 +20,7 @@
 import datetime
 import re
 import traceback
+from inspect import cleandoc
 
 import discord
 from discord.ext import commands
@@ -96,3 +97,9 @@ def parse_time(time_str):
         if param:
             time_params[name] = int(param)
     return datetime.timedelta(**time_params)
+
+
+def simple_embed(self, text, *, title="", color=discord.Color.default()) -> discord.Embed:
+    embed = discord.Embed(title=title, color=color)
+    embed.description = cleandoc(text)
+    return embed

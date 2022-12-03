@@ -16,9 +16,9 @@
 #
 
 import discord
-
-from inspect import cleandoc
 from discord.ext import commands
+
+from utils.utils import simple_embed
 
 
 class General(commands.Cog):
@@ -28,11 +28,6 @@ class General(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    async def simple_embed(self, ctx, text, *, title="", color=discord.Color.default()):
-        embed = discord.Embed(title=title, color=color)
-        embed.description = cleandoc(text)
-        await ctx.send(embed=embed)
 
     @commands.command(aliases=["info"])
     async def information(self, ctx):
@@ -47,51 +42,51 @@ class General(commands.Cog):
     @commands.command()
     async def patchguide(self, ctx):
         """How to patch a ROM"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 Here is a guide for how to patch using xDelta for Windows.
                                 <https://www.romulation.org/tutorials/using-xdelta-to-patch-roms>
 
                                 **If you are using any other device**, use [kotcrab's web patcher](https://kotcrab.github.io/xdelta-wasm/) instead.
-                                """, title="ROM hack patching guide")
+                                """, title="ROM hack patching guide"))
 
     @commands.command()
     async def wiki(self, ctx):
         """Moon Black 2 Wiki"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 [Moon Black 2 Wiki](https://pokemon-moon-black-2.fandom.com/wiki/Pokemon_Moon_Black_2_Wiki)
-                                """)
+                                """))
 
     @commands.command()
     async def wildpokemon(self, ctx):
         """Wild Pokemon location documentation"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 [Moon Black 2 Wild Pokemon List](https://cdn.discordapp.com/attachments/436652008196276224/663866369271529472/Moon_Black_2_-_Wild_List.pdf)
-                                """)
+                                """))
 
     @commands.command()
     async def fairy(self, ctx):
         """Fairy type issues"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 The implementation of Fairy-type messed up the arm9, which is causing compatibility and other issues.
                                 Currently, Fairy-types are displayed as Normal-types, but still function as a Fairy-type. While technically a bug, this fixed an issue with Summary crashes, so it is left as is.
 
                                 Fairy-types will be completely removed in a future update to fix these problems.
-                                """, title="Fairy-type issues")
+                                """, title="Fairy-type issues"))
 
     @commands.command(aliases=["hof"])
     async def halloffame(self, ctx):
         """Hall of Fame warning"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 A bug in Hall of Fame causes the entire game to crash if you bring any Fairy-type Pokemon. This may result in you ***losing your save file***.
                                 It is known that the **Noibat evolution line**, as well as **Marshadow**, also causes this issue. There are other Pokemon as well but this is unconfirmed.
 
                                 It is recommended to completely avoid using Fairy-types when challenging the Elite Four.
-                                """, title="Do NOT bring a Pokémon with a primary typing of Fairy to the Hall of Fame.")
+                                """, title="Do NOT bring a Pokémon with a primary typing of Fairy to the Hall of Fame."))
 
     @commands.command()
     async def compatibility(self, ctx):
         """Compatibility list"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 Moon Black 2 is confirmed to work on these platforms:
                                 - [DeSmuME (official latest version)](http://desmume.org/download/)
                                 - [melonDS (official latest version)](https://melonds.kuribo64.net/downloads.php)
@@ -102,23 +97,21 @@ class General(commands.Cog):
                                 - SuperCard DSTWO Plus
 
                                 Other emulators are not supported at this time. Other flashcarts *might* be supported, you can ping <@387858799198863361> if it does not work.
-                                """, title="Which emulator or software works with Moon Black 2?")
+                                """, title="Which emulator or software works with Moon Black 2?"))
 
     @commands.command()
     async def pokedex(self, ctx):
         """Pokedex entries"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 [Moon Black 2 Pokedex list](https://pastebin.com/TbxtwUYF)
-                                """
-                                )
+                                """))
 
     @commands.command()
     async def unovaforms(self, ctx):
         """Unova forms"""
-        await self.simple_embed(ctx, """
+        await ctx.send(embed=simple_embed("""
                                 [Moon Black 2 Unova forms](https://pastebin.com/cLQapvGh)
-                                """
-                                )
+                                """))
 
 
 async def setup(bot):
