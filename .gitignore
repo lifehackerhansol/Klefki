@@ -4,5 +4,5 @@
 __pycache__
 *.xml
 *.db
-*.db-shm
-*.db-wal
+venv
+*.log
