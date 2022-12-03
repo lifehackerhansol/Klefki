@@ -19,6 +19,7 @@
 
 import asyncio
 import json
+import logging
 import os
 
 import aiohttp
@@ -27,6 +28,9 @@ from discord.ext import commands
 
 from utils.sql import SQLDB
 from utils.utils import create_error_embed
+
+
+log = logging.getLogger("bot")
 
 
 class Klefki(commands.Bot):
@@ -117,6 +121,9 @@ class Klefki(commands.Bot):
 
 
 async def mainprocess():
+    discord.utils.setup_logging(handler=logging.FileHandler('bot.log', encoding='utf-8', mode='w'))
+    discord.utils.setup_logging()
+
     f = open("config.json")
     configuration = json.load(f)
     f.close()
