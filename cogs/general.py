@@ -42,7 +42,7 @@ class General(commands.Cog):
     @commands.command()
     async def patchguide(self, ctx):
         """How to patch a ROM"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 Here is a guide for how to patch using xDelta for Windows.
                                 <https://www.romulation.org/tutorials/using-xdelta-to-patch-roms>
 
@@ -52,21 +52,21 @@ class General(commands.Cog):
     @commands.command()
     async def wiki(self, ctx):
         """Moon Black 2 Wiki"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 [Moon Black 2 Wiki](https://pokemon-moon-black-2.fandom.com/wiki/Pokemon_Moon_Black_2_Wiki)
                                 """))
 
     @commands.command()
     async def wildpokemon(self, ctx):
         """Wild Pokemon location documentation"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 [Moon Black 2 Wild Pokemon List](https://cdn.discordapp.com/attachments/436652008196276224/663866369271529472/Moon_Black_2_-_Wild_List.pdf)
                                 """))
 
     @commands.command()
     async def fairy(self, ctx):
         """Fairy type issues"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 The implementation of Fairy-type messed up the arm9, which is causing compatibility and other issues.
                                 Currently, Fairy-types are displayed as Normal-types, but still function as a Fairy-type. While technically a bug, this fixed an issue with Summary crashes, so it is left as is.
 
@@ -76,7 +76,7 @@ class General(commands.Cog):
     @commands.command(aliases=["hof"])
     async def halloffame(self, ctx):
         """Hall of Fame warning"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 A bug in Hall of Fame causes the entire game to crash if you bring any Fairy-type Pokemon. This may result in you ***losing your save file***.
                                 It is known that the **Noibat evolution line**, as well as **Marshadow**, also causes this issue. There are other Pokemon as well but this is unconfirmed.
 
@@ -86,7 +86,7 @@ class General(commands.Cog):
     @commands.command()
     async def compatibility(self, ctx):
         """Compatibility list"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 Moon Black 2 is confirmed to work on these platforms:
                                 - [DeSmuME (official latest version)](http://desmume.org/download/)
                                 - [melonDS (official latest version)](https://melonds.kuribo64.net/downloads.php)
@@ -102,14 +102,14 @@ class General(commands.Cog):
     @commands.command()
     async def pokedex(self, ctx):
         """Pokedex entries"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 [Moon Black 2 Pokedex list](https://pastebin.com/TbxtwUYF)
                                 """))
 
     @commands.command()
     async def unovaforms(self, ctx):
         """Unova forms"""
-        await ctx.send(embed=simple_embed("""
+        await ctx.send(embed=simple_embed(text="""
                                 [Moon Black 2 Unova forms](https://pastebin.com/cLQapvGh)
                                 """))
 

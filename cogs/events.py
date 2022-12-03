@@ -31,7 +31,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        await member.send(embed=simple_embed("""
+        await member.send(embed=simple_embed(text="""
                                             You can download the patch for the latest version from <#409838466512191490>.
                                             You can use the `!patchguide` command for a tutorial on patching the ROM hack.
                                             DO NOT share the rom file or download pre-patched rom files, even in DMs! This will be a ban on sight.
