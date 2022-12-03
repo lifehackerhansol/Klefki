@@ -34,6 +34,7 @@ class Events(commands.Cog):
         await member.send(embed=simple_embed(text="""
                                             You can download the patch for the latest version from <#409838466512191490>.
                                             You can use the `!patchguide` command for a tutorial on patching the ROM hack.
+                                            For common troubleshooting steps, see the pinned messages in <#409838314821124098>.
                                             DO NOT share the rom file or download pre-patched rom files, even in DMs! This will be a ban on sight.
                                             """, title="Welcome to the Pokémon Moon Black 2 server!"))
 
