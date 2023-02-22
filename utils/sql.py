@@ -151,6 +151,7 @@ class SQLDB():
         if muterole == role_id:
             async with aiosqlite.connect(self.dbpath) as conn:
                 await conn.execute(f"UPDATE guilds SET mute_id=NULL WHERE id={guild_id};")
+                await conn.commit()
             return 0
         return 2
 
@@ -175,6 +176,7 @@ class SQLDB():
         if logchannel == channel_id:
             async with aiosqlite.connect(self.dbpath) as conn:
                 await conn.execute(f"UPDATE guilds SET logchannel_id=NULL WHERE id={guild_id};")
+                await conn.commit()
             return 0
         return 2
 
