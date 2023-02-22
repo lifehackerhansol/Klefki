@@ -42,6 +42,8 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if not await self.bot.db.get_logchannel(message.guild.id):
+            return
         if message.author.id != self.bot.user.id:
             res = re.findall(r'(?:discordapp\.com/invite|discord\.gg|discord\.com/invite)/([\w]+)', message.content)
             if res:
