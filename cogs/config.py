@@ -134,7 +134,7 @@ class Config(commands.Cog):
                 if err == 2:
                     return await ctx.send(f"`{channel.name}` is not a logging channel!")
                 if err == 0:
-                    return await ctx.send(f"Success! `{role.name}` is no longer a log channel.")
+                    return await ctx.send(f"Success! `{channel.name}` is no longer a log channel.")
         await ctx.send("Channel does not exist. Please try again.")
 
 
