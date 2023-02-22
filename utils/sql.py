@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+import logging
+import os
 import sqlite3
 from datetime import datetime
 
@@ -22,11 +24,50 @@ import aiosqlite
 from discord.utils import time_snowflake
 
 
+log = logging.getLogger("bot")
+
+
 class SQLDB():
     def __init__(self, bot):
         self.bot = bot
+        self.dbpath = "klefki.db"
 
-    dbpath = "klefki.db"
+        # Perform migrations
+        # Needs sqlite3 here because __init__ is not async
+        conn = sqlite3.connect(self.dbpath)
+        cur = conn.cursor()
+        try:
+            user_version = conn.execute("PRAGMA user_version")
+            ret = user_version.fetchone()
+            revision = ret[0]
+
+        # if error, set to 0
+        # breaks backward compatibility with pre-user_version dbs
+        except sqlite3.Error:
+            log.debug(f"{self.dbpath} has no user_version set. Applying all schemas...")
+            revision = 0
+
+        updates = os.listdir("dbupdate")
+
+        for i, x in enumerate(updates):
+            updates[i] = x.replace(".sql", "")
+        to_update = []
+
+        for i in updates:
+            if int(i) > revision:
+                to_update.append(int(i))
+
+        if not to_update:
+            log.info(f"{self.dbpath} is up to date.")
+        else:
+            to_update.sort()
+            log.info(f"Updating {self.dbpath} from {revision} to {to_update[-1]}")
+            for i in to_update:
+                with open(f"dbupdate/{i}.sql", "r") as f:
+                    conn.execute(f.read())
+            conn.execute(f"PRAGMA user_version={to_update[-1]}")
+            log.info(f"Updated {self.dbpath} from {revision} to {to_update[-1]}")
+            conn.close()
 
     def generate_id(self) -> int:
         return time_snowflake(datetime.now())
