@@ -7,20 +7,19 @@
 import discord
 from discord.ext import commands
 
-from utils.utils import is_staff, is_guild_owner
+from utils.utils import is_staff
 
 
 class Invite(commands.Cog):
     """
     Discord Invites cog.
 
-    This cog manages the invite filter, as well as provide a macro for 
+    This cog manages the invite filter, as well as provide a macro for
     whitelisted invites.
     """
 
     def __init__(self, bot):
         self.bot = bot
-
 
     @commands.group(aliases=["invf"])
     @commands.check_any(commands.is_owner(), is_staff())

@@ -35,7 +35,6 @@ class SQLDB():
         # Perform migrations
         # Needs sqlite3 here because __init__ is not async
         conn = sqlite3.connect(self.dbpath)
-        cur = conn.cursor()
         try:
             user_version = conn.execute("PRAGMA user_version")
             ret = user_version.fetchone()
