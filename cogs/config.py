@@ -102,6 +102,38 @@ class Config(commands.Cog):
                     return await ctx.send(f"Success! `{role.name}` is no longer a mute role.")
         await ctx.send("Role does not exist. Please try again.")
 
+    @config.group()
+    async def logchannel(self, ctx):
+        """Set logging channels for this server"""
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(ctx.command)
+
+    @logchannel.command(name='add')
+    async def logchannel_add(self, ctx, channelid: int):
+        """Set log channel for this server"""
+        for channel in ctx.guild.channels:
+            if channel.id == channelid:
+                logchannel = await self.bot.db.get_logchannel(ctx.guild.id)
+                if logchannel:
+                    return await ctx.send("A logging channel already exists!")
+                await self.bot.db.add_logchannel(ctx.guild.id, channelid)
+                return await ctx.send(f"Success! `{channel.name}` is now set as log channel.")
+        await ctx.send("Channel does not exist. Please try again.")
+
+    @logchannel.command(name='remove')
+    async def logchannel_remove(self, ctx, channelid: int):
+        """Remove log channel for this server"""
+        for channel in ctx.guild.channels:
+            if channel.id == channelid:
+                err = await self.bot.db.remove_logchannel(ctx.guild.id, channelid)
+                if err == 1:
+                    return await ctx.send("There is no logging channel set for this server!")
+                if err == 2:
+                    return await ctx.send(f"`{channel.name}` is not a logging channel!")
+                if err == 0:
+                    return await ctx.send(f"Success! `{role.name}` is no longer a log channel.")
+        await ctx.send("Channel does not exist. Please try again.")
+
 
 async def setup(bot):
     await bot.add_cog(Config(bot))

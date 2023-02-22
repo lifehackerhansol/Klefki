@@ -153,3 +153,27 @@ class SQLDB():
                 await conn.execute(f"UPDATE guilds SET mute_id=NULL WHERE id={guild_id};")
             return 0
         return 2
+
+    async def add_logchannel(self, guild_id: int, channel_id: int):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            await self.add_guild(guild_id)
+        async with aiosqlite.connect(self.dbpath) as conn:
+            await conn.execute(f"UPDATE guilds SET logchannel_id={channel_id} WHERE id={guild_id};")
+            await conn.commit()
+
+    async def get_logchannel(self, guild_id: int):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            return None
+        return guild[0]['logchannel_id']
+
+    async def remove_logchannel(self, guild_id: int, channel_id: int) -> int:
+        logchannel = await self.get_logchannel(guild_id)
+        if not logchannel:
+            return 1
+        if logchannel == channel_id:
+            async with aiosqlite.connect(self.dbpath) as conn:
+                await conn.execute(f"UPDATE guilds SET logchannel_id=NULL WHERE id={guild_id};")
+            return 0
+        return 2

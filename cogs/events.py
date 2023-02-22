@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+import re
+
 import discord
 from discord.ext import commands
 
@@ -37,6 +39,19 @@ class Events(commands.Cog):
                                             For common troubleshooting steps, see the pinned messages in <#409838314821124098>.
                                             DO NOT share the ROM file or download pre-patched ROM files, even in DMs! This will be a ban on sight.
                                             """, title="Welcome to the Pokémon Moon Black 2 server!"))
+
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        if message.author.id != self.bot.user.id:
+            res = re.findall(r'(?:discordapp\.com/invite|discord\.gg|discord\.com/invite)/([\w]+)', message.content)
+            if res:
+                await message.delete()
+                logchannel_id = await self.bot.db.get_logchannel(message.guild.id)
+                logchannel = message.guild.get_channel(logchannel_id)
+                log_msg = f"{message.author.mention} tried to send an invite:\n"
+                log_msg = f"{log_msg}----------------\n"
+                log_msg = f"{log_msg}{message.content}"
+                await logchannel.send(log_msg)
 
 
 async def setup(bot):

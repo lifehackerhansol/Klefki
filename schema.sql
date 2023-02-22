@@ -1,3 +1,13 @@
+--
+-- Copyright (C) 2022-2023 lifehackerhansol
+--
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+--
+-- This is the bot databse schema.
+-- Do not actually apply this schema, just running
+-- the bot will use migrations in `dbupdate` folder
+-- to apply this schema.
+--
 drop table if exists guilds;
 drop table if exists modroles;
 drop table if exists warns;
@@ -6,7 +16,8 @@ drop table if exists warns;
 create table guilds
 (
 	id BIGINT PRIMARY KEY,
-	mute_id BIGINT
+	mute_id BIGINT,
+	logchannel_id BIGINT
 );
 
 
