@@ -37,3 +37,9 @@ create table warns
 	reason TEXT
 );
 
+create table invitewhitelist
+(
+	id BIGINT PRIMARY KEY,
+	guild_id BIGINT NOT NULL REFERENCES guilds(id),
+    invite TEXT
+);

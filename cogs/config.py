@@ -104,7 +104,10 @@ class Config(commands.Cog):
 
     @config.group()
     async def logchannel(self, ctx):
-        """Set logging channels for this server"""
+        """
+        Set logging channels for this server
+        This is required if you wish to add an invite filter.
+        """
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 

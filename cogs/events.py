@@ -20,6 +20,7 @@ import re
 import discord
 from discord.ext import commands
 
+from utils.modutil import check_if_staff
 from utils.utils import simple_embed
 
 
@@ -42,18 +43,25 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if not await self.bot.db.get_logchannel(message.guild.id):
+        ctx = await self.bot.get_context(message)
+        # message deletion only available if you enable logs
+        if not await self.bot.db.get_logchannel(ctx.guild.id):
             return
-        if message.author.id != self.bot.user.id:
-            res = re.findall(r'(?:discordapp\.com/invite|discord\.gg|discord\.com/invite)/([\w]+)', message.content)
-            if res:
-                await message.delete()
-                logchannel_id = await self.bot.db.get_logchannel(message.guild.id)
-                logchannel = message.guild.get_channel(logchannel_id)
-                log_msg = f"{message.author.mention} tried to send an invite:\n"
-                log_msg = f"{log_msg}----------------\n"
-                log_msg = f"{log_msg}{message.content}"
-                await logchannel.send(log_msg)
+        if message.author.id == self.bot.user.id:
+            return
+        if await check_if_staff(ctx, message.author):
+            return
+
+        # Now for the actual checking
+        res = re.findall(r'(?:discordapp\.com/invite|discord\.gg|discord\.com/invite)/([\w]+)', message.content)
+        if res:
+            await message.delete()
+            logchannel_id = await self.bot.db.get_logchannel(message.guild.id)
+            logchannel = message.guild.get_channel(logchannel_id)
+            log_msg = f"{message.author.mention} tried to send an invite:\n"
+            log_msg = f"{log_msg}----------------\n"
+            log_msg = f"{log_msg}{message.content}"
+            await logchannel.send(log_msg)
 
 
 async def setup(bot):

@@ -177,3 +177,29 @@ class SQLDB():
                 await conn.execute(f"UPDATE guilds SET logchannel_id=NULL WHERE id={guild_id};")
             return 0
         return 2
+
+    async def get_invitefilter(self, guild_id: int):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            return None
+        async with aiosqlite.connect(self.dbpath) as conn:
+            conn.row_factory = sqlite3.Row
+            return await conn.execute_fetchall(f"SELECT * FROM invitefilter WHERE guild_id={guild_id};")
+
+    async def add_invitefilter(self, guild_id: int, invite: str, alias: str):
+        guild = await self.get_guild(guild_id)
+        if not guild:
+            await self.add_guild(guild_id)
+        async with aiosqlite.connect(self.dbpath) as conn:
+            await conn.execute_insert(
+                f"INSERT INTO invitefilter (id, guild_id, invite, alias) VALUES ({self.generate_id()}, {guild_id}, '{invite}', '{alias}');"
+            )
+            await conn.commit()
+
+    async def remove_invitefilter(self, guild_id: int, alias):
+        async with aiosqlite.connect(self.dbpath) as conn:
+            conn.row_factory = sqlite3.Row
+            invite = await conn.execute_fetchall(f"SELECT * FROM invitefilter WHERE guild_id={guild_id} AND alias={alias};")
+            inviteid = invite[0]["id"]
+            await conn.execute(f"DELETE FROM invitefilter WHERE id={inviteid};")
+            await conn.commit()
