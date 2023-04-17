@@ -2,7 +2,6 @@ name: Flake8 Check
 
 on:
   pull_request:
-  push:
 
 jobs:
   build:
