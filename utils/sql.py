@@ -30,7 +30,7 @@ log = logging.getLogger("bot")
 class SQLDB():
     def __init__(self, bot):
         self.bot = bot
-        self.dbpath = "klefki.db"
+        self.dbpath = "data/klefki.db"
 
         # Perform migrations
         # Needs sqlite3 here because __init__ is not async
@@ -63,7 +63,7 @@ class SQLDB():
             log.info(f"Updating {self.dbpath} from {revision} to {to_update[-1]}")
             for i in to_update:
                 with open(f"dbupdate/{i}.sql", "r") as f:
-                    conn.execute(f.read())
+                    conn.executescript(f.read())
             conn.execute(f"PRAGMA user_version={to_update[-1]}")
             log.info(f"Updated {self.dbpath} from {revision} to {to_update[-1]}")
             conn.close()

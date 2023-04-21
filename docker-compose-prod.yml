@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  klefki:
+    image: ghcr.io/lifehackerhansol/klefki
+    volumes:
+      - ./data:/home/klefki/data
+    secrets:
+      - klefki-config
+
+secrets:
+  klefki-config:
+    file: ./config.json

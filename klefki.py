@@ -120,7 +120,7 @@ class Klefki(commands.Bot):
             await channel.send(embed=embed)
 
 
-async def mainprocess():
+async def bootstrap():
     discord.utils.setup_logging(handler=logging.FileHandler('bot.log', encoding='utf-8', mode='w'))
     discord.utils.setup_logging()
 
@@ -136,4 +136,4 @@ async def mainprocess():
 
 
 if __name__ == '__main__':
-    asyncio.run(mainprocess())
+    asyncio.run(bootstrap())

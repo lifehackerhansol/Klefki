@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  klefki:
+    build: .
+    volumes:
+      - ./data:/home/klefki/data
+    secrets:
+      - klefki-config
+
+secrets:
+  klefki-config:
+    file: ./config.json
