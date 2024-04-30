@@ -102,7 +102,7 @@ class General(commands.Cog):
     @commands.command()
     async def dump(self, ctx):
         """How to dump games and data for CFW consoles"""
-        await ctx.send(embed=simple_embed(ctx, text="""
+        await ctx.send(embed=simple_embed(text="""
                                     [Dumping DS cartridges from a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges#dumping-a-game-cartridge)
                                     [Dumping DS cartridges from a DSi console](https://dsi.cfw.guide/dumping-game-cards.html)
                                     """, title="Dumping Games to ROM files"))
