@@ -105,7 +105,6 @@ class General(commands.Cog):
         await ctx.send(embed=simple_embed(ctx, text="""
                                     [Dumping DS cartridges from a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges#dumping-a-game-cartridge)
                                     [Dumping DS cartridges from a DSi console](https://dsi.cfw.guide/dumping-game-cards.html)
-                                    [Dumping DSiWare](https://dsi.cfw.guide/dsiware-backups.html)
                                     """, title="Dumping Games to ROM files"))
 
     @commands.command()
