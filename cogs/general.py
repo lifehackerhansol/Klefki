@@ -60,7 +60,7 @@ class General(commands.Cog):
     async def wildpokemon(self, ctx):
         """Wild Pokemon location documentation"""
         await ctx.send(embed=simple_embed(text="""
-                                [Moon Black 2 Wild Pokemon List](https://cdn.discordapp.com/attachments/436652008196276224/663866369271529472/Moon_Black_2_-_Wild_List.pdf)
+                                [Moon Black 2 Wild Pokemon List](https://discord.com/channels/409838314821124096/650740607916048394/663869660696936500)
                                 """))
 
     @commands.command()
